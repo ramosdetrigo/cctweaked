@@ -26,9 +26,9 @@ farmer:extend({
 
 -- Resets the farmer -> drops everything at the chest, moves to 1,1 and resets initial target
 function farmer:reset()
-    self:goTo(self.chest_pos)
+    self:farmTo(self.chest_pos)
     self:dropInventory()
-    self:goTo(self.field_start)
+    self:farmTo(self.field_start)
     self.target = { x = self.field_end.x, y = self.field_start.y }
 end
 
@@ -46,20 +46,8 @@ function farmer:run()
 
     -- Main farm loop
     while true do
-        -- repeat until reaching target
-        repeat
-            self:inspectDown() -- updates block info
-            if self.has_block_below then
-                local crop_info = crop_db[self.current_block.name]
-                -- Only farm if needed (crop might not be in db)
-                if crop_info and self.current_block.state.age >= crop_info.mature_age or (not crop_info) then
-                    -- Only break if needed, else right click with hoe
-                    self:farmDown(crop_info and crop_info.needs_breaking)
-                end
-            end
-            -- get items below the farmer
-            self:suckDown(3)
-        until self:moveTorwards(self.target)
+    	-- moves to target while farming
+        self:farmTo(self.target)
 
         -- changes the target to the other side of the field
         self.target.x = (self.target.x == self.field_start.x) and self.field_end.x or self.field_start.x
@@ -74,6 +62,25 @@ function farmer:run()
     end
 end
 
+-- Moves to specified coords while farming
+function farmer:farmTo(target)
+    -- repeat until reaching target
+    repeat
+        self:inspectDown() -- updates block info
+        if self.has_block_below then
+            local crop_info = crop_db[self.current_block.name]
+                -- Only farm if needed (crop might not be in db)
+                if crop_info and self.current_block.state.age >= crop_info.mature_age or (not crop_info) then
+                    -- Only break if needed, else right click with hoe
+                    self:farmDown(crop_info and crop_info.needs_breaking)
+                end
+            end
+        -- get items below the farmer
+        self:suckDown(3)
+    until self:moveTorwards(self.target)
+end
+
+-- Updates block_below state
 function farmer:inspectDown()
     self.has_block_below, self.current_block = turtle.inspectDown()
     -- Prevents errors finding strings when we expect tables
