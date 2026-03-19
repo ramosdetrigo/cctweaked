@@ -77,7 +77,7 @@ function farmer:farmTo(target)
             end
         -- get items below the farmer
         self:suckDown(3)
-    until self:moveTorwards(self.target)
+    until self:moveTorwards(target)
 end
 
 -- Updates block_below state
