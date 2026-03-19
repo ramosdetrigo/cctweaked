@@ -70,13 +70,16 @@ function farmer:farmTo(target)
         if self.has_block_below then
             local crop_info = crop_db[self.current_block.name]
                 -- Only farm if needed (crop might not be in db)
-                if crop_info and self.current_block.state.age >= crop_info.mature_age or (not crop_info) then
+                local curr_age = self.current_block.state.age or 999
+                if crop_info and curr_age >= crop_info.mature_age or (not crop_info) then
                     -- Only break if needed, else right click with hoe
                     self:farmDown(crop_info and crop_info.needs_breaking)
                 end
             end
         -- get items below the farmer
-        self:suckDown(3)
+        if self.current_block.name ~= "minecraft:chest" then
+            self:suckDown(3)
+        end
     until self:moveTorwards(target)
 end
 

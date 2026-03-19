@@ -32,6 +32,10 @@ return {
         mature_age = 3,
         seed = "farmersdelight:tomato_seeds"
     },
+    ["farmersdelight:rice_panicles"] = {
+    	mature_age = 3,
+    	seed = "farmersdelight:rice"
+    },
 
     -- Rustic Delight
     ["rusticdelight:coffee"] = {
