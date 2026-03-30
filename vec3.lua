@@ -26,6 +26,10 @@ vec3.__sub = vec3.sub
 
 
 function vec3:mul(scalar)
+    -- allows __mul metatable to be compatible with "scalar * vec"
+    if type(self) == "number" then
+        self, scalar = scalar, self
+    end
     return vec3(self.x * scalar, self.y * scalar, self.z * scalar)
 end
 vec3.__mul = vec3.mul
