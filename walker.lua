@@ -34,6 +34,7 @@ end
 
 -- Moves torwards the turtle's target by 1 step
 -- returns true if at target
+---@param target vec3
 function walker:moveTorwards(target)
     -- Don't move if already at target
     if self.pos == target then return true; end
@@ -60,12 +61,14 @@ function walker:moveTorwards(target)
 end
 
 -- Makes the turtle go to the specified coords
+---@param target vec3
 function walker:goTo(target)
     repeat until self:moveTorwards(target)
 end
 
 -- Finds the "normalized" turtle direction torwards a certain target
 -- (closest coord component first)
+---@param target vec3
 function walker:getDirectionTorwards(target)
     local dv = target - self.pos
     local dv_abs = dv:abs()
@@ -80,6 +83,7 @@ function walker:getDirectionTorwards(target)
 end
 
 -- Finds the closest turn torwards a certain target
+---@param target_dir vec3
 function walker:getClosestTurn(target_dir)
     -- u-turn: turn twice
     if target_dir == (self.dir * -1) then return 2; end
@@ -126,6 +130,7 @@ end
 
 -- negative number: turns N times to the left
 -- positive number: turns N times to the right
+---@param n number
 function walker:turn(n)
     local fn = (n > 0) and self.turnRight or self.turnLeft
     for _ = 1, math.abs(n) % 4 do

@@ -20,6 +20,7 @@ miner:extend({
 })
 
 
+---@param start vec3
 function miner:mineVein(start)
     local stack = {} -- block stack
     local found = {} -- found blocks hashmap
@@ -91,7 +92,6 @@ function miner:run()
     -- ++conter fuel
 end
 
----comment
 ---@param target vec3
 function miner:mineTo(target)
     repeat

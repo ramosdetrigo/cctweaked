@@ -5,6 +5,13 @@ local ore_table = {
 }
 
 
+---@alias ItemAction
+---| '"refuel"' # Use item for refueling the turtle
+---| '"keep"' # Do nothing, keep item in inventory
+---| '"drop"' # Drop the item
+
+
+---@type table<string, ItemAction>
 local item_action_table = {
     ["c:coal"] = "refuel",
     ["c:fences/wooden"] = "refuel",
@@ -26,6 +33,7 @@ local item_action_table = {
 
 
 -- Actions: refuel, keep, drop
+---@return ItemAction
 local function get_item_action(item)
     -- if no item, do nothing (keep)
     if item == nil then return "keep" end
@@ -41,6 +49,7 @@ end
 
 
 -- Returns true if block is considered an ore, false otherwise
+---@return boolean
 local function is_block_ore(block)
     if block == nil then return false; end
     if block.tags then
