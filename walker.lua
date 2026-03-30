@@ -91,6 +91,24 @@ function walker:forward()
 end
 
 
+function walker:back()
+    turtle.back()
+    self.pos = self.pos - self.dir
+end
+
+
+function walker:up()
+    turtle.up()
+    self.pos.y = self.pos.y + 1
+end
+
+
+function walker:down()
+    turtle.up()
+    self.pos.y = self.pos.y - 1
+end
+
+
 -- negative number: turns N times to the left
 -- positive number: turns N times to the right
 function walker:turn(n)
