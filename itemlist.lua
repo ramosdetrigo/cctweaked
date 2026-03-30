@@ -1,7 +1,11 @@
-local items = {}
+local ore_table = {
+    ["c:ores"] = true,
+    ["c:clusters"] = true,
+    ["minecraft:amethyst_block"] = true
+}
 
 
-local tags = {
+local item_action_table = {
     ["c:coal"] = "refuel",
     ["c:fences/wooden"] = "refuel",
     ["c:fence_gates/wooden"] = "refuel",
@@ -22,17 +26,37 @@ local tags = {
 
 
 -- Actions: refuel, keep, drop
-local function item_action(item)
+local function get_item_action(item)
     -- if no item, do nothing (keep)
     if item == nil then return "keep" end
     if item.tags then
         for tag, _ in pairs(item.tags) do
-            if tags[tag] then
-                return tags[tag]
+            if item_action_table[tag] then
+                return item_action_table[tag]
             end
         end
     end
-    return items[item.name] or "drop"
+    return item_action_table[item.name] or "drop"
 end
 
-return { items = items, tags = tags, item_action = item_action }
+
+-- Returns true if block is considered an ore, false otherwise
+local function is_block_ore(block)
+    if block == nil then return false; end
+    if block.tags then
+        for tag, _ in pairs(block.tags) do
+            if ore_table[tag] then
+                return ore_table[tag]
+            end
+        end
+    end
+    return ore_table[block.name] or false
+end
+
+
+return {
+    item_action_table = item_action_table,
+    ore_table = ore_table,
+    get_item_action = get_item_action,
+    is_block_ore = is_block_ore,
+}
