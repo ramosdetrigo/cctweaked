@@ -75,9 +75,13 @@ function miner:run()
         self:mineTo(self.target)
 
         self.trash_counter = self.trash_counter + 1
-        if self.trash_counter > self.clear_trash_treshold then
-            -- TODO: clear inventory
-        end
+        -- if self.trash_counter > self.clear_trash_treshold then
+        --     -- TODO: clear inventory
+        -- end
+
+        -- TODO: refuel_with_lava check
+
+        -- TODO: get_item_action
 
         self.target.x = (self.target.x == self.field_start.x) and self.field_end.x or self.field_start.x
 
@@ -88,8 +92,6 @@ function miner:run()
             self:reset()
         end
     end
-    -- ++conter trash
-    -- ++conter fuel
 end
 
 ---@param target vec3
