@@ -25,18 +25,22 @@ end
 function vec3:add(rhs)
     return vec3(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
 end
+vec3.__add = vec3.add
 
 function vec3:sub(rhs)
     return vec3(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
 end
+vec3.__sub = vec3.sub
 
 function vec3:mul(scalar)
     return vec3(self.x * scalar, self.y * scalar, self.z * scalar)
 end
+vec3.__mul = vec3.mul
 
 function vec3:div(scalar)
     return vec3(self.x / scalar, self.y / scalar, self.z / scalar)
 end
+vec3.__div = vec3.div
 
 function vec3:rotate90(n)
     local fn = (n > 0) and self.rotate90Right or self.rotate90Left
