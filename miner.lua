@@ -1,7 +1,7 @@
 local miner = require "walker"
 local utils = require "utils"
+local vec3 = require "vec3"
 
-local vec3 = utils.vec3
 
 function miner:mineVein(start)
     local stack = {} -- block stack

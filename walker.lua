@@ -1,26 +1,26 @@
 local u = require "utils"
+local vec3 = require "vec3"
 
 local walker = {
-    pos = { x = 0, y = 0 },
-    dir = { x = 1, y = 0 },
+    pos = vec3(0,0,0),
+    dir = vec3(1,0,0),
 }
 
 -- Syncs the walker's position based on gps info
 -- (REQUIRES MODEM)
 function walker:syncPos()
-    local x, _, y = gps.locate()
-    self.pos.x = x
-    self.pos.y = y
+    self.pos = vec3(gps.locate())
 end
 
 -- Syncs the walker's direction based on gps info
 -- (REQUIRES MODEM)
 function walker:syncDir()
-    local x0, _, y0 = gps.locate()
+    turtle.dig()
+    local v0 = vec3(gps.locate())
     turtle.forward()
-    local x1, _, y1 = gps.locate()
+    local v1 = vec3(gps.locate())
     turtle.back()
-    self.dir = { x = x1 - x0, y = y1 - y0 }
+    self.dir = v1 - v0
 end
 
 -- Extends the walker's table
@@ -53,45 +53,43 @@ end
 
 -- Checks if the walker is at position pos
 function walker:isPosition(pos)
-    return self.pos.x == pos.x and self.pos.y == pos.y
+    return self.pos == pos
 end
 
 -- Checks if the walker's direction is the same as dir
 function walker:isDirection(dir)
-    return self.dir.x == dir.x and self.dir.y == dir.y
+    return self.dir == dir
 end
 
 -- Finds the "normalized" turtle direction torwards a certain target
 -- (closest coord component first)
 function walker:getDirectionTorwards(target)
     local dx = target.x - self.pos.x
-    local dy = target.y - self.pos.y
+    local dz = target.z - self.pos.z
 
     -- move torwards the CLOSEST coordinate first
-    if dy ~= 0 then
-        return { x = 0, y = u.sign(dy) }
+    if dz ~= 0 then
+        return vec3(0, 0, u.sign(dz))
     else
-        return { x = u.sign(dx), y = 0 }
+        return vec3(u.sign(dx), 0, 0)
     end
 end
 
 -- Finds the closest turn torwards a certain target
 function walker:getClosestTurn(target_dir)
-    if target_dir.x == -self.dir.x or target_dir.y == -self.dir.y then
-        -- u-turn: turn twice
-        return 2
-    end
-
+    -- u-turn: turn twice
+    if target_dir == (self.dir * -1) then return 2; end
     -- right turn = -1, left turn = +1
-    return -(target_dir.x * self.dir.y - target_dir.y * self.dir.x)
+    return -(target_dir.x * self.dir.z - target_dir.z * self.dir.x)
 end
+
 
 -- Walks forward updating position state
 function walker:forward()
     turtle.forward()
-    self.pos.x = self.pos.x + self.dir.x
-    self.pos.y = self.pos.y + self.dir.y
+    self.pos = self.pos + self.dir
 end
+
 
 -- negative number: turns N times to the left
 -- positive number: turns N times to the right
@@ -102,19 +100,20 @@ function walker:turn(n)
     end
 end
 
+
 -- Turns left updating direction state
 function walker:turnLeft()
-    local old_y = self.dir.y
-    self.dir.y = -self.dir.x
-    self.dir.x = old_y
+    local old_z = self.dir.z
+    self.dir.z = -self.dir.x
+    self.dir.x = old_z
     turtle.turnLeft()
 end
 
 -- Turns right updating direction state
 function walker:turnRight()
-    local old_y = self.dir.y
-    self.dir.y = self.dir.x
-    self.dir.x = -old_y
+    local old_z = self.dir.z
+    self.dir.z = self.dir.x
+    self.dir.x = -old_z
     turtle.turnRight()
 end
 
