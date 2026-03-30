@@ -26,6 +26,7 @@ function walker:syncDir()
 end
 
 -- Extends the walker's table
+---@param t table
 function walker:extend(t)
     for k, v in pairs(t) do
         self[k] = v
@@ -35,6 +36,7 @@ end
 -- Moves torwards the turtle's target by 1 step
 -- returns true if at target
 ---@param target vec3
+---@return boolean # true if already at target false otherwise
 function walker:moveTorwards(target)
     -- Don't move if already at target
     if self.pos == target then return true; end
@@ -84,6 +86,7 @@ end
 
 -- Finds the closest turn torwards a certain target
 ---@param target_dir vec3
+---@return number turns
 function walker:getClosestTurn(target_dir)
     -- u-turn: turn twice
     if target_dir == (self.dir * -1) then return 2; end

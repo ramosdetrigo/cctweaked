@@ -142,6 +142,7 @@ function miner:dropInventory()
     turtle.select(1)
 end
 
+---@return vec3[]
 function miner:neighbouringOres()
     local coords = {}
     for i = 1, 4 do
